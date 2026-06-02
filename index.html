@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calimero Weight-Photo Coverage Viewer</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #657383;
+      --line: #d8dee6;
+      --paper: #f5f7f2;
+      --panel: #ffffff;
+      --high: #0f766e;
+      --month: #a16207;
+      --low: #2563eb;
+      --none: #7b8794;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 22px 28px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+    header p {
+      margin: 4px 0 12px;
+      color: var(--muted);
+      max-width: 1120px;
+      line-height: 1.45;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 7px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button.active {
+      border-color: #111827;
+      background: #111827;
+      color: #fff;
+    }
+    main {
+      padding: 22px 28px 44px;
+    }
+    .weight-node {
+      margin: 0 0 18px;
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--none);
+      border-radius: 8px;
+    }
+    .weight-node.exact_day_high { border-left-color: var(--high); }
+    .weight-node.month_level_context { border-left-color: var(--month); }
+    .weight-node.nearby_low { border-left-color: var(--low); }
+    .weight-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+    }
+    h2 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+    .weight-line,
+    .context {
+      margin: 4px 0 10px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .status {
+      white-space: nowrap;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef1f4;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .photos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .photo-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .image-wrap {
+      min-height: 180px;
+      background: #eef1f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: 240px;
+      object-fit: contain;
+      background: #eef1f4;
+    }
+    .photo-meta {
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .photo-title {
+      color: var(--ink);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    a {
+      color: #075985;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .empty {
+      color: var(--muted);
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: #fafafa;
+    }
+    .hidden { display: none; }
+    @media (max-width: 720px) {
+      header, main { padding-left: 14px; padding-right: 14px; }
+      .weight-head { display: block; }
+      .status { display: inline-block; margin-top: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calimero Weight-Photo Coverage Viewer</h1>
+    <p>Each section is one institutional live-weight record. Photos are remotely embedded from public source pages and are not downloaded or redistributed. Photo context is descriptive only; no health status is inferred.</p>
+    <div class="filters" aria-label="viewer filters">
+      <button class="active" data-filter="all">all weight records</button>
+      <button data-filter="covered">covered only</button>
+      <button data-filter="uncovered">uncovered only</button>
+      <button data-filter="high-weight">high-weight period</button>
+      <button data-filter="lower-weight">lower-weight period</button>
+    </div>
+  </header>
+  <main>
+    
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2026-05-10</h2>
+                  <p class="weight-line">6600 kg · age approx. 45.85 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-08-15 (268 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2026-02-22</h2>
+                  <p class="weight-line">6685 kg · age approx. 45.64 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-08-15 (191 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2026-01-15</h2>
+                  <p class="weight-line">6800 kg · age approx. 45.54 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-08-15 (153 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2025-10-26</h2>
+                  <p class="weight-line">6665 kg · age approx. 45.32 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-08-15 (72 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node month_level_context covered">
+              <div class="weight-head">
+                <div>
+                  <h2>2025-08-02</h2>
+                  <p class="weight-line">7035 kg · age approx. 45.09 years</p>
+                </div>
+                <span class="status">month_level_context</span>
+              </div>
+              <p class="context">Matched photos: 4; nearest available photo date: 2025-08-15 (13 days).</p>
+              <div class="photos">
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_24718.jpg" alt="calimero_photo_035" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_035</div>
+                <div>Photo date: 2025-08-15 (month)</div>
+                <div>Gap: 13 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Manfred Deutschländer</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_24717.jpg" alt="calimero_photo_036" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_036</div>
+                <div>Photo date: 2025-08-15 (month)</div>
+                <div>Gap: 13 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Manfred Deutschländer</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_24719.jpg" alt="calimero_photo_037" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_037</div>
+                <div>Photo date: 2025-08-15 (month)</div>
+                <div>Gap: 13 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Manfred Deutschländer</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_24720.jpg" alt="calimero_photo_038" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_038</div>
+                <div>Photo date: 2025-08-15 (month)</div>
+                <div>Gap: 13 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Manfred Deutschländer</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            </div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2025-06-07</h2>
+                  <p class="weight-line">7135 kg · age approx. 44.93 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-08-15 (69 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2025-04-12</h2>
+                  <p class="weight-line">7255 kg · age approx. 44.78 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-03-15 (28 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2025-02-15</h2>
+                  <p class="weight-line">7060 kg · age approx. 44.63 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-03-15 (28 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2024-12-06</h2>
+                  <p class="weight-line">6650 kg · age approx. 44.43 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-03-15 (99 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2024-10-12</h2>
+                  <p class="weight-line">6760 kg · age approx. 44.28 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2025-03-15 (154 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2024-09-06</h2>
+                  <p class="weight-line">6675 kg · age approx. 44.18 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2024-04-15 (144 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2024-05-31</h2>
+                  <p class="weight-line">7100 kg · age approx. 43.91 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2024-04-15 (46 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node nearby_low covered">
+              <div class="weight-head">
+                <div>
+                  <h2>2024-03-07</h2>
+                  <p class="weight-line">7110 kg · age approx. 43.68 years</p>
+                </div>
+                <span class="status">nearby_low</span>
+              </div>
+              <p class="context">Matched photos: 1; nearest available photo date: 2024-04-15 (39 days).</p>
+              <div class="photos">
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://www.zoochat.com/community/media/01-2024-europes-largest-african-elephant-bull-calimero-outside-in-the-snow.703905/full?d=1705689973" alt="zoochat_calimero_2024_01_18_yunha" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">zoochat_calimero_2024_01_18_yunha</div>
+                <div>Photo date: 2024-01-18 (day)</div>
+                <div>Gap: 49 days</div>
+                <div>Source: ZooChat</div>
+                <div>Photographer: Yunha</div>
+                <a href="https://www.zoochat.com/community/media/01-2024-europes-largest-african-elephant-bull-calimero-outside-in-the-snow.703905/" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            </div>
+            </section>
+            
+            <section class="weight-node month_level_context covered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2023-09-08</h2>
+                  <p class="weight-line">6800 kg · age approx. 43.19 years</p>
+                </div>
+                <span class="status">month_level_context</span>
+              </div>
+              <p class="context">Matched photos: 4; nearest available photo date: 2023-09-15 (7 days).</p>
+              <div class="photos">
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_22698.jpg" alt="calimero_photo_028" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_028</div>
+                <div>Photo date: 2023-09-15 (month)</div>
+                <div>Gap: 7 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Martijn Diesvelt</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_22704.jpg" alt="calimero_photo_029" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_029</div>
+                <div>Photo date: 2023-09-15 (month)</div>
+                <div>Gap: 7 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Martijn Diesvelt</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_22701.jpg" alt="calimero_photo_030" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_030</div>
+                <div>Photo date: 2023-09-15 (month)</div>
+                <div>Gap: 7 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Martijn Diesvelt</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_22707.jpg" alt="calimero_photo_031" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_031</div>
+                <div>Photo date: 2023-09-15 (month)</div>
+                <div>Gap: 7 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Martijn Diesvelt</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            </div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2023-08-01</h2>
+                  <p class="weight-line">6800 kg · age approx. 43.08 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2023-09-15 (45 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2023-03-27</h2>
+                  <p class="weight-line">7100 kg · age approx. 42.73 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2023-09-15 (172 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2022-12-30</h2>
+                  <p class="weight-line">7080 kg · age approx. 42.50 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2022-04-15 (259 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2022-11-25</h2>
+                  <p class="weight-line">7190 kg · age approx. 42.40 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2022-04-15 (224 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2022-10-23</h2>
+                  <p class="weight-line">7075 kg · age approx. 42.31 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2022-04-15 (191 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2022-09-18</h2>
+                  <p class="weight-line">6900 kg · age approx. 42.21 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2022-04-15 (156 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2022-03-26</h2>
+                  <p class="weight-line">7235 kg · age approx. 41.73 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2022-04-15 (20 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2021-12-31</h2>
+                  <p class="weight-line">6910 kg · age approx. 41.50 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2022-04-15 (105 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node month_level_context covered">
+              <div class="weight-head">
+                <div>
+                  <h2>2021-06-22</h2>
+                  <p class="weight-line">7110 kg · age approx. 40.97 years</p>
+                </div>
+                <span class="status">month_level_context</span>
+              </div>
+              <p class="context">Matched photos: 2; nearest available photo date: 2021-06-15 (7 days).</p>
+              <div class="photos">
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_20503.jpg" alt="calimero_photo_023" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_023</div>
+                <div>Photo date: 2021-06-15 (month)</div>
+                <div>Gap: 7 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Marion Driessen</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_20504.jpg" alt="calimero_photo_024" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_024</div>
+                <div>Photo date: 2021-06-15 (month)</div>
+                <div>Gap: 7 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Marion Driessen</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            </div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2021-04-11</h2>
+                  <p class="weight-line">7340 kg · age approx. 40.78 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2021-06-15 (65 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2021-02-04</h2>
+                  <p class="weight-line">7310 kg · age approx. 40.59 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2021-06-15 (131 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2021-01-06</h2>
+                  <p class="weight-line">7120 kg · age approx. 40.52 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2020-09-15 (113 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2020-11-26</h2>
+                  <p class="weight-line">7000 kg · age approx. 40.40 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2020-09-15 (72 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node month_level_context covered">
+              <div class="weight-head">
+                <div>
+                  <h2>2020-09-30</h2>
+                  <p class="weight-line">7220 kg · age approx. 40.25 years</p>
+                </div>
+                <span class="status">month_level_context</span>
+              </div>
+              <p class="context">Matched photos: 2; nearest available photo date: 2020-09-15 (15 days).</p>
+              <div class="photos">
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_20003.jpg" alt="calimero_photo_021" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_021</div>
+                <div>Photo date: 2020-09-15 (month)</div>
+                <div>Gap: 15 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Brigitte Argast</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            
+
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://elefanten-fotolexikon.eu/images/n_20006.jpg" alt="calimero_photo_022" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">calimero_photo_022</div>
+                <div>Photo date: 2020-09-15 (month)</div>
+                <div>Gap: 15 days</div>
+                <div>Source: Elefanten-Fotolexikon</div>
+                <div>Photographer: Brigitte Argast</div>
+                <a href="https://elefanten-fotolexikon.eu/profile/europa/nederland/hilvarenbeek-safaripark-beekse-bergen/calimero/?lang=EN" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            </div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2020-07-08</h2>
+                  <p class="weight-line">7260 kg · age approx. 40.02 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2020-09-15 (69 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2020-05-02</h2>
+                  <p class="weight-line">7205 kg · age approx. 39.83 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2020-09-15 (136 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2020-04-01</h2>
+                  <p class="weight-line">7415 kg · age approx. 39.75 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2020-09-15 (167 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2020-02-28</h2>
+                  <p class="weight-line">7245 kg · age approx. 39.66 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-09-15 (166 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node nearby_low covered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2019-06-24</h2>
+                  <p class="weight-line">7535 kg · age approx. 38.98 years</p>
+                </div>
+                <span class="status">nearby_low</span>
+              </div>
+              <p class="context">Matched photos: 1; nearest available photo date: 2019-08-03 (40 days).</p>
+              <div class="photos">
+            <article class="photo-card">
+              <div class="image-wrap"><img src="https://www.zoochat.com/community/media/african-elephant-huge-bull.453521/full?d=1565205721" alt="zoochat_calimero_2019_08_03_snowleopard" loading="lazy"></div>
+              <div class="photo-meta">
+                <div class="photo-title">zoochat_calimero_2019_08_03_snowleopard</div>
+                <div>Photo date: 2019-08-03 (day)</div>
+                <div>Gap: 40 days</div>
+                <div>Source: ZooChat</div>
+                <div>Photographer: snowleopard</div>
+                <a href="https://www.zoochat.com/community/media/african-elephant-huge-bull.453521/" target="_blank" rel="noopener noreferrer">Open source page</a>
+              </div>
+            </article>
+            </div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2019-04-14</h2>
+                  <p class="weight-line">7835 kg · age approx. 38.78 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (111 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2019-03-19</h2>
+                  <p class="weight-line">7590 kg · age approx. 38.71 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (137 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2019-02-08</h2>
+                  <p class="weight-line">7505 kg · age approx. 38.60 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (176 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-10-01</h2>
+                  <p class="weight-line">7120 kg · age approx. 38.25 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (306 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-08-24</h2>
+                  <p class="weight-line">7040 kg · age approx. 38.14 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (344 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-05-22</h2>
+                  <p class="weight-line">7480 kg · age approx. 37.89 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (438 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-04-28</h2>
+                  <p class="weight-line">7640 kg · age approx. 37.82 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (462 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-03-29</h2>
+                  <p class="weight-line">7400 kg · age approx. 37.74 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (492 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-02-18</h2>
+                  <p class="weight-line">7425 kg · age approx. 37.63 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (531 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2018-01-12</h2>
+                  <p class="weight-line">7315 kg · age approx. 37.53 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (568 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2017-12-07</h2>
+                  <p class="weight-line">7145 kg · age approx. 37.43 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (604 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2017-10-16</h2>
+                  <p class="weight-line">6780 kg · age approx. 37.29 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2019-08-03 (656 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2017-03-17</h2>
+                  <p class="weight-line">6860 kg · age approx. 36.71 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2015-03-15 (733 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered">
+              <div class="weight-head">
+                <div>
+                  <h2>2016-09-21</h2>
+                  <p class="weight-line">7190 kg · age approx. 36.22 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2015-03-15 (556 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered high-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2016-05-19</h2>
+                  <p class="weight-line">7490 kg · age approx. 35.88 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2015-03-15 (431 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+            <section class="weight-node uncovered lower-weight">
+              <div class="weight-head">
+                <div>
+                  <h2>2004-04-28</h2>
+                  <p class="weight-line">6200 kg · age approx. 23.82 years</p>
+                </div>
+                <span class="status">uncovered</span>
+              </div>
+              <p class="context">Matched photos: 0; nearest available photo date: 2001-07-01 (1032 days).</p>
+              <div class="photos"><div class="empty">No suitable dated photo within the matching window.</div></div>
+            </section>
+            
+  </main>
+  <script>
+    const buttons = Array.from(document.querySelectorAll('button[data-filter]'));
+    const nodes = Array.from(document.querySelectorAll('.weight-node'));
+    function applyFilter(filter) {
+      for (const button of buttons) button.classList.toggle('active', button.dataset.filter === filter);
+      for (const node of nodes) {
+        let show = filter === 'all';
+        if (filter === 'covered') show = node.classList.contains('covered');
+        if (filter === 'uncovered') show = node.classList.contains('uncovered');
+        if (filter === 'high-weight') show = node.classList.contains('high-weight');
+        if (filter === 'lower-weight') show = node.classList.contains('lower-weight');
+        node.classList.toggle('hidden', !show);
+      }
+    }
+    for (const button of buttons) {
+      button.addEventListener('click', () => applyFilter(button.dataset.filter));
+    }
+  </script>
+</body>
+</html>
